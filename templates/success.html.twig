@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+        {% endblock %}
+
+        {% block javascripts %}
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}
+           <h1>thank you for applying</h1>
+           <h1>your name is : {{name}}</h1>
+           <h1>your age is : {{age}}</h1>
+        {% endblock %}
+    </body>
+</html>

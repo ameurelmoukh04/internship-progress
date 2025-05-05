@@ -3,3 +3,15 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+    # config/routes.yaml
+test-url:
+    path: /test
+    controller: App\Controller\FirstController::index
+    methods: GET|POST
+
+success:
+    path: /success
+    controller: App\Controller\FirstController::success
+    methods: GET
+
