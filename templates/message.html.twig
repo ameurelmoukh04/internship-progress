@@ -11,10 +11,9 @@
     </head>
     <body>
         {% block body %}
-        <h1>Simple Form</h1>
+        <h1>Contact us</h1>
             {{ form_start(form) }}
                 {{ form_row(form.name) }}
-                {{ form_row(form.age) }}
                 <button class="btn">Submit</button>
             {{ form_end(form) }}
         {% endblock %}

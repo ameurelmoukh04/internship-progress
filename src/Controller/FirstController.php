@@ -1,45 +1,44 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\Message;
 use App\Entity\Subscriber;
+use App\Form\MessageForm;
 use App\Form\SubscriberForm;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FirstController extends AbstractController{
-#[Route('/test', name:'test-url',defaults:['id'=>0])]
-
-public function index(Request $request)
+class FirstController extends AbstractController
 {
-    $subscriber = new Subscriber();
-    $form = $this->createForm(SubscriberForm::class,$subscriber);
+    #[Route('/contact-us', name: 'contact-us')]
+    public function index(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $message = new Message();
 
-    $form->handleRequest($request);
+        $form = $this->createForm(MessageForm::class, $message);
+        $form->handleRequest($request);
 
-    if($form->isSubmitted() && $form->isValid()){
-        $name = $form->getData()->getName();
-        $age = $form->getData()->getAge();
-        return $this->redirectToRoute('success',[
-            'name' => $name,
-            'age' => $age
+        if ($form->isSubmitted() && $form->isValid()) {
+            //dd($message);
+            $entityManager->persist($message);
+            $entityManager->flush();
+
+            return new Response('message id ' . $message->getId() . ' Loading ...');
+        }
+
+        return $this->render('message.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
-    return $this->render('first_template.html.twig', [
-        'form' => $form->createView(),
-    ]);
-}
-
-#[Route('/success/{name}',name:'success')]
-public function success(Request $request){
-    $name = $request->query->get('name');
-    $age = $request->query->get('age');
-    return $this->render('success.html.twig',[
-        'name'=> $name,
-        'age'=> $age,
-    ]);
-}
-
+    #[Route('/success', name: 'success')]
+    public function success(Subscriber $subscriber): Response
+    {
+        return $this->render('success.html.twig', [
+            'subscriber' => $subscriber,
+        ]);
+    }
 }

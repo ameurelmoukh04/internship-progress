@@ -5,13 +5,9 @@ controllers:
     type: attribute
 
     # config/routes.yaml
-test-url:
-    path: /test
+
+contact-us:
+    path: /contact-us
     controller: App\Controller\FirstController::index
     methods: GET|POST
-
-success:
-    path: /success
-    controller: App\Controller\FirstController::success
-    methods: GET
 
