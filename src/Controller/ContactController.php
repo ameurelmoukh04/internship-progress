@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FirstController extends AbstractController
+class ContactController extends AbstractController
 {
     #[Route('/contact-us', name: 'contact-us')]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
@@ -26,7 +26,7 @@ class FirstController extends AbstractController
             $entityManager->persist($message);
             $entityManager->flush();
 
-            return new Response('message id ' . $message->getId() . ' Loading ...');
+            return new Response('we recived your message dear user '. $message->getName());
         }
 
         return $this->render('message.html.twig', [

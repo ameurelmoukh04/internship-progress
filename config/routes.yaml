@@ -8,6 +8,16 @@ controllers:
 
 contact-us:
     path: /contact-us
-    controller: App\Controller\FirstController::index
+    controller: App\Controller\ContactController::index
     methods: GET|POST
+    
+posts:
+    path: /posts
+    controller: App\Controller\PostsController::index
+    methods: GET
+
+home:
+    path: /
+    controller: App\Controller\HomePageController::index
+    methods: GET
 

@@ -11,8 +11,18 @@
     </head>
     <body>
         {% block body %}
-           <h1>thank you for applying</h1>
-           <h1>your name is : {{subscriber}}</h1>
+        
+<h1>Total Posts : {{total_posts}}</h1>
+<table>
+{% for post in posts%}
+    <tr> 
+        <td>{{post.title}} ||</td>
+        <td>{{post.content}} ||</td>
+        <td>{{post.date|date('Y-m-d') }}</td>
+    </tr>
+{% endfor %}
+</table>
+           
         {% endblock %}
     </body>
 </html>

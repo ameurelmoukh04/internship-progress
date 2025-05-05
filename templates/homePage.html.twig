@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+        {% endblock %}
+
+        {% block javascripts %}
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}
+        <h1>Home Page</h1>
+            <button> <a href="{{ path('posts') }}" class="btn btn-primary">Posts Page</a></button>
+            <button><a href="{{ path('contact-us') }}" class="btn btn-secondary">Contact Us</a></button>
+        {% endblock %}
+    </body>
+</html>
