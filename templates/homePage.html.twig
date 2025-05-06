@@ -14,38 +14,9 @@
 
 {% endblock %}
 {% block content %}
-<table>
-<tbody>
 
-{% if tasks is empty %}
-<h1>There is no Tasks Yet. </h1>
-{% else %}
-{% for task in tasks %}
-<tr>
-<td><h1>{{task.name}}</h1></td>
-<td>
-<h3 class='status'>{{task.status}}</h3>
-</td>
-<td>
-<button class="toggle" data-id="{{ task.id }}">
-    {% if task.status == 'Completed' %}mark as Pending{% else %}mark as Completed
-    {% endif %}
-</button>
-</td>
-<td>
-<button class='delete' data-id="{{ task.id }}">Delete</button>
-<td>
-</tr>
-
-{% endfor %}
-{% endif %}
-</tbody>
-
-</table>
 
 <table>
-<tbody class='tbody'>
-test
-</tbody>
+<tbody class='tbody'></tbody>
 </table>
 {% endblock %}

@@ -1,4 +1,4 @@
-$(document).ready(function () {
+function fetchAllItems(){
     $.ajax({
         url: "/tasks-test",
         method: "GET"
@@ -10,22 +10,25 @@ $(document).ready(function () {
                 <tr>
                     <td><h1>${task.name}</h1></td>
                     <td>
-                    <h3 class='status'>${task.status}</h3>
+                        <h3 class='status'>${task.status}</h3>
                     </td>
                     <td>
-                    <button class="toggle" data-id="${task.id}">
-                        {% if task.status == 'Completed' %}mark as Pending{% else %}mark as Completed
-                        {% endif %}
-                    </button>
+                        <button class="toggle" data-id="${task.id}">
+                            ${task.status === 'Completed' ? 'mark as Pending' : 'mark as Completed'}
+                        </button>
                     </td>
                     <td>
-                    <button class='delete' data-id="{{ task.id }}">Delete</button>
-                    <td>
-                </tr>`)
+                        <button class='delete' data-id="${task.id}">Delete</button>
+                    </td>
+                </tr>
+            `);
         });
     })
+}
+$(document).ready(function () {
+    fetchAllItems()
 
-    $('.toggle').on('click', function (e) {
+    $(document).on('click', '.toggle', function (e) {
         e.preventDefault();
         const id = $(this).data('id');
         const $button = $(this);
@@ -49,7 +52,7 @@ $(document).ready(function () {
         });
     });
 
-    $('.delete').on('click', function (e) {
+    $(document).on('click', '.delete', function (e) {
         e.preventDefault();
         const $id = $(this).data('id');
         const $thisbutton = $(this);
@@ -69,7 +72,7 @@ $(document).ready(function () {
         })
     })
 
-    $('.add').on('click', function (e) {
+    $(document).on('click', '.add', function (e) {
         e.preventDefault();
         const $newHtml = `
                 <form >
@@ -85,11 +88,10 @@ $(document).ready(function () {
         $('.newForm').html($newHtml)
     })
 
-    $(document).on('submit', function (e) {
+    $(document).on('submit','.newForm', function (e) {
         e.preventDefault();
         const name = $(this).find('input[name="name"]').val();
         const details = $(this).find('textarea[name="details"]').val();
-        console.log(name, details);
 
         $.ajax({
             url: '/add-task',
@@ -99,12 +101,9 @@ $(document).ready(function () {
                 details: details
             },
         }).then((response) => {
-            $.ajax({
-                url: '/tasks',
-                method: 'GET',
-            }).then((response) => {
-                console.log(response)
-            })
+            $tbody = $('.tbody');
+            $tbody.empty();
+            fetchAllItems();
 
         })
     })
