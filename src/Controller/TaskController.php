@@ -18,7 +18,6 @@ class TaskController extends AbstractController{
     {
         $repository = $em->getRepository(Task::class);
         $tasks = $repository->findAll();
-
         return $this->render('homePage.html.twig', [
             'tasks'=> $tasks
         ]);
@@ -35,16 +34,42 @@ class TaskController extends AbstractController{
         $task = new Task;
         $task->setName($request->request->get('name'));
         $task->setDetails($request->request->get('details'));
-        $task->setStatus('pending');
-
+        $task->setStatus('Pending');
+        
         $em->persist($task);
         $em->flush();
         return $this->redirectToRoute('tasks');
     }
-
+    
+    #[Route('/tasks/{id}/delete',name:'destroy-task')]
     public function destroy(int $id, EntityManagerInterface $em)
     {
-        $em = 
+        $repository = $em->getRepository(Task::class);
+        $task = $repository->find($id);
+        if(!$task){
+            return $this->createNotFoundException('task not found');
+        }
+        $em->remove($task);
+        $em->flush();
+        $tasks = $repository->findAll();
+        return $this->redirectToRoute('tasks');
+    }
+    
+    #[Route('/tasks/{id}/update',name:'complete-task')]
+    public function toggleStatus(int $id,EntityManagerInterface $em){
+        $repository = $em->getRepository(Task::class);
+        $task = $repository->find($id);
+
+        if(!$task){
+            return new Response('Task Not Found',404);
+        }
+        if($task->getStatus() == 'Completed'){
+            $task->setStatus('Pending');
+        }else{
+            $task->setStatus('Completed');
+        }
+        $em->flush();
+        return $this->redirectToRoute('tasks');
     }
 
 }

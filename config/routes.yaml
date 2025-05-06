@@ -5,20 +5,3 @@ controllers:
     type: attribute
 
     # config/routes.yaml
-home:
-    path: /
-    controller: App\Controller\HomePageController::index
-    methods: GET
-
-tasks:
-    path: /tasks
-    controller: App\Controller\TaskController::index
-    methods: GET
-add-task:
-    path: /add-task
-    controller: App\Controller\TaskController::store
-    methods: POST
-new-form:
-    path: /new-form
-    controller: App\Controller\TaskController::new_form
-    methods: POST

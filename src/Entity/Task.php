@@ -20,6 +20,7 @@ class Task
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $details = null;
 
+    #[ORM\Column(length: 50, nullable: false)]
     private ?string $status = null;
 
     

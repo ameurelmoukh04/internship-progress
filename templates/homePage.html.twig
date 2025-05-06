@@ -2,27 +2,40 @@
 
 {% block body %}
 <h1>All Tasks : </h1>
-    <form method='POST' action="{{ path('new-form')}}">
+    <form method='POST' action="{{ path('new-form') }}">
     <button type='submit'>Add a task</button>
-    
     </form>
 {% endblock %}
 {% block content %}
 <table>
 <tbody>
+
+{% if tasks is empty %}
+<h1>There is no Tasks Yet. </h1>
+{% else %}
 {% for task in tasks %}
 <tr>
 <td><h1>{{task.name}}</h1><td>
+<td><h3>{{task.status}}</h3><td>
 
 <td>
-<a >view details</a>
+<form method="POST" action="{{ path('complete-task', { id:task.id }) }}" onsubmit="return confirm('Are you sure?')">
+{% if task.status == 'Completed' %}
+<button>mark as Pending</button>
+{% else %}
+<button>mark as Completed</button>
+{% endif %}
+</form>
 <td>
 <td>
-<a>delete</a>
+<form method="POST" action="{{ path('destroy-task', { id:task.id }) }}" onsubmit="return confirm('Are you sure?')">
+<button>Delete</button>
+</form>
 <td>
 </tr>
 
 {% endfor %}
+{% endif %}
 <tbody>
 </table>
 {% endblock %}
