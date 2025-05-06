@@ -21,3 +21,8 @@ home:
     controller: App\Controller\HomePageController::index
     methods: GET
 
+delete-post:
+    path: /posts/{id}/delete
+    controller: App\Controller\PostsController::destroy
+    methods: POST
+

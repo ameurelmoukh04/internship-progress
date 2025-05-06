@@ -25,6 +25,16 @@ class PostsController extends AbstractController
             'total_posts' => count($posts),
             'posts' => $posts
         ]);
-        return new Response('Total Posts: ' . count($posts));
+        
+    }
+    #[Route('/posts/{id}/delete', name: 'delete-post', methods:['POST'])]
+    public function destroy(int $id,EntityManagerInterface $entityManager){
+    $repository = $entityManager->getRepository(Post::class);
+    $selectedPost = $repository->find($id);
+    $entityManager->remove($selectedPost);
+    $entityManager->flush();
+    return new Response('deleted successfuly');
+    //return $this->redirectToRoute('thankyou');
+
     }
 }
