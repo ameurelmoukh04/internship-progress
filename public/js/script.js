@@ -102,6 +102,8 @@ $(document).ready(function () {
             },
         }).then((response) => {
             $tbody = $('.tbody');
+            $newForm = $('.newForm');
+            $newForm.empty();
             $tbody.empty();
             fetchAllItems();
 
