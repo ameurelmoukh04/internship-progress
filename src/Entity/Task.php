@@ -12,15 +12,20 @@ class Task
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['task:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['task:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['task:read'])]
     private ?string $details = null;
 
+    
     #[ORM\Column(length: 50, nullable: false)]
+    #[Groups(['task:read'])]
     private ?string $status = null;
 
     

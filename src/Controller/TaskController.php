@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class TaskController extends AbstractController{
-    #[Route('tasks', name:'tasks')]
+    #[Route('/tasks', name:'tasks')]
     public function index(EntityManagerInterface $em,SerializerInterface $serializer):Response
     {
         $repository = $em->getRepository(Task::class);
@@ -21,6 +21,16 @@ class TaskController extends AbstractController{
         return $this->render('homePage.html.twig', [
             'tasks'=> $tasks
         ]);
+    }
+
+    #[Route('/tasks-test')]
+    public function index2(EntityManagerInterface $em,SerializerInterface $serializer):Response
+    {
+        $repository = $em->getRepository(Task::class);
+        $tasks = $repository->findAll();
+        $json = $serializer->serialize($tasks, 'json', ['groups' => 'task:read']);
+        //$newJson = json_encode(['items' => $tasks]);
+        return new JsonResponse(['items' => json_decode($json)],200);
     }
 
     #[Route('/new-form',name:'new-form',methods:['GET'])]
@@ -38,7 +48,8 @@ class TaskController extends AbstractController{
         
         $em->persist($task);
         $em->flush();
-        return $this->redirectToRoute('tasks');
+
+        return new JsonResponse(['status' => 201, 'message' =>'created']);
     }
     
     #[Route('/tasks/{id}/delete',name:'destroy-task')]
@@ -51,7 +62,6 @@ class TaskController extends AbstractController{
         }
         $em->remove($task);
         $em->flush();
-        $tasks = $repository->findAll();
         return new JsonResponse(['status' => 200, 'message' => 'Deleted']);
     }
     
@@ -74,7 +84,7 @@ class TaskController extends AbstractController{
 
     #[Route('/posts',name:'posts',methods:['POST','GET'])]
     public function ajaxTest(){
-        return $this->json(['data' => 'data']);
+        return $this->json(['items' => ['item1','item2'],'status' => 200]);
     }
     
 }
