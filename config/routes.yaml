@@ -5,24 +5,16 @@ controllers:
     type: attribute
 
     # config/routes.yaml
-
-contact-us:
-    path: /contact-us
-    controller: App\Controller\ContactController::index
-    methods: GET|POST
-    
-posts:
-    path: /posts
-    controller: App\Controller\PostsController::index
-    methods: GET
-
 home:
     path: /
     controller: App\Controller\HomePageController::index
     methods: GET
 
-delete-post:
-    path: /posts/{id}/delete
-    controller: App\Controller\PostsController::destroy
+tasks:
+    path: /tasks
+    controller: App\Controller\TaskController::index
+    methods: GET
+add-task:
+    path: /add-task
+    controller: App\Controller\TaskController::store
     methods: POST
-

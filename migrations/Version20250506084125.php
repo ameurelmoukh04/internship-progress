@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250505105327 extends AbstractMigration
+final class Version20250506084125 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,15 +21,14 @@ final class Version20250505105327 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            CREATE TABLE subscriber (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, age INT DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+            CREATE TABLE task (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(50) NOT NULL, details VARCHAR(255) DEFAULT NULL,status ENUM('Completed', 'Pending') NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
     }
 
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            DROP TABLE subscriber
+            DROP TABLE task
         SQL);
     }
 }
