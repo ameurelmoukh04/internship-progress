@@ -52,14 +52,14 @@ class TaskController extends AbstractController{
         $em->remove($task);
         $em->flush();
         $tasks = $repository->findAll();
-        return $this->redirectToRoute('tasks');
+        return new JsonResponse(['status' => 200, 'message' => 'Deleted']);
     }
     
     #[Route('/tasks/{id}/update',name:'complete-task')]
     public function toggleStatus(int $id,EntityManagerInterface $em){
         $repository = $em->getRepository(Task::class);
         $task = $repository->find($id);
-
+        
         if(!$task){
             return new Response('Task Not Found',404);
         }
@@ -69,7 +69,12 @@ class TaskController extends AbstractController{
             $task->setStatus('Completed');
         }
         $em->flush();
-        return $this->redirectToRoute('tasks');
+        return new Response('Updated',200);
     }
 
+    #[Route('/posts',name:'posts',methods:['POST','GET'])]
+    public function ajaxTest(){
+        return $this->json(['data' => 'data']);
+    }
+    
 }

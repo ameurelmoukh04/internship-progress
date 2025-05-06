@@ -1,8 +1,15 @@
 {% extends('base.html.twig') %}
 
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script defer src="js/script.js"></script>
+
+{# <script type="module" src="{{ asset('js/script.js')}}" defer></script> #}
+{% endblock %}
+
 {% block body %}
 <h1>All Tasks : </h1>
-    <form method='POST' action="{{ path('new-form') }}">
+    <form method='GET' action="{{ path('new-form') }}">
     <button type='submit'>Add a task</button>
     </form>
 {% endblock %}
@@ -15,22 +22,24 @@
 {% else %}
 {% for task in tasks %}
 <tr>
-<td><h1>{{task.name}}</h1><td>
-<td><h3>{{task.status}}</h3><td>
+<td><h1>{{task.name}}</h1></td>
 
 <td>
-<form method="POST" action="{{ path('complete-task', { id:task.id }) }}" onsubmit="return confirm('Are you sure?')">
-{% if task.status == 'Completed' %}
-<button>mark as Pending</button>
-{% else %}
-<button>mark as Completed</button>
-{% endif %}
-</form>
+<h3 class='status'>{{task.status}}</h3>
+</td>
+
 <td>
+{# <form method="POST" action="{{ path('complete-task', { id:task.id }) }}" onsubmit="return confirm('Are you sure?')"> #}
+<button class="toggle" data-id="{{ task.id }}">
+    {% if task.status == 'Completed' %}mark as Pending{% else %}mark as Completed
+    {% endif %}
+</button>
+{# </form> #}
+</td>
 <td>
-<form method="POST" action="{{ path('destroy-task', { id:task.id }) }}" onsubmit="return confirm('Are you sure?')">
-<button>Delete</button>
-</form>
+{# <form method="POST" action="{{ path('destroy-task', { id:task.id }) }}" onsubmit="return confirm('Are you sure?')"> #}
+<button class='delete' data-id="{{ task.id }}">Delete</button>
+{# </form> #}
 <td>
 </tr>
 
