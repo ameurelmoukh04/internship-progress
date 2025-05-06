@@ -30,7 +30,7 @@ class TaskController extends AbstractController{
         $task->setDetails('second Task Details');
         $task->setStatus('pending');
         $em->persist($task);
-        $em->flush;
+        $em->flush();
     }
 
 }
