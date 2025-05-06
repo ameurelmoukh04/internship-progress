@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -23,14 +24,27 @@ class TaskController extends AbstractController{
         ]);
     }
 
+    #[Route('/new-form',name:'new-form',methods:['GET'])]
+    public function new_form(){
+        return $this->render('new.html.twig');
+    }
+
     #[Route('/add-task',name:'add-task',methods:['POST'])]
-    public function store(Request $request, EntityManagerInterface $em){
+    public function store(Request $request, EntityManagerInterface $em):Response
+    {
         $task = new Task;
-        $task->setName('second Task');
-        $task->setDetails('second Task Details');
+        $task->setName($request->request->get('name'));
+        $task->setDetails($request->request->get('details'));
         $task->setStatus('pending');
+
         $em->persist($task);
         $em->flush();
+        return $this->redirectToRoute('tasks');
+    }
+
+    public function destroy(int $id, EntityManagerInterface $em)
+    {
+        $em = 
     }
 
 }

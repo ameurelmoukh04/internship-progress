@@ -2,12 +2,27 @@
 
 {% block body %}
 <h1>All Tasks : </h1>
-<button>
-    <a href="{{ route('add-task')}}">Add a Task</a>
-</button>
+    <form method='POST' action="{{ path('new-form')}}">
+    <button type='submit'>Add a task</button>
+    
+    </form>
 {% endblock %}
 {% block content %}
+<table>
+<tbody>
 {% for task in tasks %}
-<h1>{{task.name}}</h1>
+<tr>
+<td><h1>{{task.name}}</h1><td>
+
+<td>
+<a >view details</a>
+<td>
+<td>
+<a>delete</a>
+<td>
+</tr>
+
 {% endfor %}
+<tbody>
+</table>
 {% endblock %}
