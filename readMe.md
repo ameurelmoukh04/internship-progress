@@ -20,9 +20,11 @@ Hi, I’m Ameur, a backend PHP developer passionate about web technologies and L
 
 ## 📘 Daily Log
 
-| Day | Date | Description | Links/Notes |
+| Day | Date | Description | Branch Link |
 |-----|------|-------------|-------------|
-| 1   | 2025-05-05 | ✅ Setup dev environment, explored Symfony structure, created basic routes | [commit](link-to-commit) |
+| 1   | 2025-05-05 | ✅ Setup dev environment, explored Symfony structure, created basic routes
+                     ✅Entities ➡️ classes that represent database tables (laravel models)
+ | [commit](link-to-commit) |
 | 2   | 2025-05-06 | ✅ Created entities and forms, handled form validation | [commit](link) |
 | 3   | 2025-05-07 | ✅ Learned Doctrine relationships, worked on CRUD operations | [link] |
 | ... | ... | ... | ... |
