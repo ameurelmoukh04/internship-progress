@@ -23,7 +23,7 @@ class TaskController extends AbstractController{
         ]);
     }
 
-    #[Route('/tasks-test')]
+    #[Route('/tasks-api')]
     public function index2(EntityManagerInterface $em,SerializerInterface $serializer):Response
     {
         $repository = $em->getRepository(Task::class);
@@ -44,6 +44,7 @@ class TaskController extends AbstractController{
         $task = new Task;
         $task->setName($request->request->get('name'));
         $task->setDetails($request->request->get('details'));
+        $task->setImage($request->request->get('image'));
         $task->setStatus('Pending');
         
         $em->persist($task);

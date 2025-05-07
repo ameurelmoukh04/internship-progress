@@ -27,7 +27,10 @@ class Task
     #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['task:read'])]
     private ?string $status = null;
-
+    
+    #[ORM\Column(length: 100, nullable: false)]
+    #[Groups(['task:read'])]
+    private ?string $image = null;
     
     public function getId(): ?int
     {
@@ -66,5 +69,16 @@ class Task
     {
          $this->status = $status;
          return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): ?static
+    {
+         $this->image = $image;
+        return $this;
     }
 }
