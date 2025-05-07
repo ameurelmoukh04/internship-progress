@@ -1,26 +1,34 @@
-function fetchAllItems(){
+
+
+function fetchAllItems() {
     $.ajax({
         url: "/tasks-test",
         method: "GET"
     }).then((response) => {
-        const $tbody = $('.tbody');
+        const $myTable = $('#myTable').DataTable();
         response.items.forEach(task => {
-            console.log(task)
-            $tbody.append(`
-                <tr class="">
-                        <td scope="row">${task.name}</td>
-                        <td>${task.details}</td>
-                        <td class="status">${task.status}</td>
-                        <td>
-                        <button class="toggle" data-id="${task.id}">
-                            ${task.status === 'Completed' ? 'mark as Pending' : 'mark as Completed'}
-                        </button>
-                        <button class='delete' data-id="${task.id}">Delete</button>
-                </tr>
-            `);
-        });
+            $myTable.row.add([
+                `<td scope="row">${task.name}</td>`,
+                `<td>${task.details}</td>`,
+                `<td class="status">${task.status}</td>`,
+                `<td style="display: grid; grid-template-columns: repeat(2, 1fr);">
+            <div>
+                <button class="toggle" data-id="${task.id}">
+                    ${task.status === 'Completed' ? 'mark as Pending' : 'mark as Completed'}
+                </button>
+            </div>
+            <div>
+                <button class="delete" data-id="${task.id}">Delete</button>
+            </div>
+        </td>`
+            ]).draw();
+
+        }
+        );
+        $('#myTable').DataTable()
     })
 }
+
 $(document).ready(function () {
     fetchAllItems()
 
@@ -30,42 +38,82 @@ $(document).ready(function () {
         const $button = $(this);
         const $row = $button.closest('tr');
         const $statusText = $row.find('.status');
-        $.ajax({
-            url: `/tasks/${id}/update`,
-            method: 'POST',
-            data: { id: id }
-        }).then(function (response) {
-            if (response === 'Updated') {
-                if ($button.text().trim() == 'mark as Pending') {
-                    $button.text('mark as Completed')
-                    $statusText.text('Pending')
-                } else {
-                    $button.text('mark as Pending')
-                    $statusText.text('Completed')
-                }
-            }
+        console.log($statusText)
 
+        Swal.fire({
+            title: "Are you sure?",
+            text: `You want to mark this Task as ${$statusText.text() == 'Completed' ? 'Pending' : 'Completed'}`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes"
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                $.ajax({
+                    url: `/tasks/${id}/update`,
+                    method: 'POST',
+                    data: { id: id }
+                }).then(function (response) {
+                    if (response === 'Updated') {
+                        if ($button.text().trim() == 'mark as Pending') {
+                            $button.text('mark as Completed')
+                            $statusText.text('Pending')
+                        } else {
+                            $button.text('mark as Pending')
+                            $statusText.text('Completed')
+                        }
+                    }
+
+                });
+                Swal.fire({
+                    title: "Updated!",
+                    text: `Your Task has been Marked as ${$statusText.text() == 'Completed' ? 'Pending' : 'Completed'}.`,
+                    icon: "success"
+                });
+            }
         });
+
     });
 
     $(document).on('click', '.delete', function (e) {
         e.preventDefault();
-        const $id = $(this).data('id');
-        const $thisbutton = $(this);
-        const $parent = $thisbutton.parent().parent();
-        $.ajax({
-            url: `/tasks/${$id}/delete`,
-            method: 'POST',
-            data: { id: $id }
-        }).then((response) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
 
-            if (response.status === 200) {
-                console.log(response)
-                $parent.remove()
-                return;
+                const $id = $(this).data('id');
+                const $thisbutton = $(this);
+                const $parent = $thisbutton.parent().parent().parent();
+                $.ajax({
+                    url: `/tasks/${$id}/delete`,
+                    method: 'POST',
+                    data: { id: $id }
+                }).then((response) => {
+
+                    if (response.status === 200) {
+                        console.log(response)
+                        $parent.remove()
+                        return;
+                    }
+                    alert('there is an error');
+                })
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your Task has been deleted.",
+                    icon: "success"
+                });
             }
-            alert('there is an error');
-        })
+        });
     })
 
     let status = false;
@@ -100,37 +148,34 @@ $(document).ready(function () {
   </div>
 </div>
             `;
-            $('body').append($newHtml);
-             const modalElement = document.getElementById('exampleModal');
-            const modal = new bootstrap.Modal(modalElement, {
-                backdrop: false,
-                keyboard: true,
-                focus: true
-              });
-            modal.show();
-        })
-        
-        $(document).on('click','.submitButton', function (e) {
-            e.preventDefault();
-            const name = $('#task-name').val();
-            const details = $('#task-details').val();
-        console.log(name,details)
-        
-        $.ajax({
-            url: '/add-task',
-            method: 'POST',
-            data: {
-                name: name,
-                details: details
-            },
-        }).then((response) => {
-            $tbody = $('.tbody');
-            $tbody.empty();
-            fetchAllItems();
-            $('#closeButton').click();
-            alert('inserted')
-            
-        })
+        $('body').append($newHtml);
+        const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        modal.show();
+    })
+
+    $(document).on('click', '.submitButton', function (e) {
+        e.preventDefault();
+        const name = $('#task-name').val();
+        const details = $('#task-details').val();
+        if (name.trim().length == 0 || details.trim().length == 0) {
+            alert('they are empty')
+        } else {
+            $.ajax({
+                url: '/add-task',
+                method: 'POST',
+                data: {
+                    name: name,
+                    details: details
+                },
+            }).then((response) => {
+                $tbody = $('.tbody');
+                $tbody.empty();
+                fetchAllItems();
+                $('#closeButton').click();
+
+
+            })
+        }
     })
 
 
