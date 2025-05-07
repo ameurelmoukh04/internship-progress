@@ -1,22 +1,38 @@
 {% extends('base.html.twig') %}
 
-{% block javascripts %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script defer src="js/script.js"></script>
 
-{% endblock %}
 
 {% block body %}
 <h1>All Tasks : </h1>
-    <button type='submit' class="add">Add a Task</button>
+<div>
 
-    <div class="newForm"></div>
+    
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Add Task
+    </button>
 
-{% endblock %}
-{% block content %}
 
 
-<table>
-<tbody class='tbody'></tbody>
-</table>
+<div
+            class="table-responsive"
+        >
+            <table
+                class="table table-primary"
+            >
+                <thead>
+                    <tr>
+                        <th scope="col">Task Title</th>
+                        <th scope="col">Task Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class='tbody'>
+                    
+                </tbody>
+            </table>
+        </div>
+
+
+
 {% endblock %}

@@ -7,19 +7,15 @@ function fetchAllItems(){
         response.items.forEach(task => {
             console.log(task)
             $tbody.append(`
-                <tr>
-                    <td><h1>${task.name}</h1></td>
-                    <td>
-                        <h3 class='status'>${task.status}</h3>
-                    </td>
-                    <td>
+                <tr class="">
+                        <td scope="row">${task.name}</td>
+                        <td>${task.details}</td>
+                        <td class="status">${task.status}</td>
+                        <td>
                         <button class="toggle" data-id="${task.id}">
                             ${task.status === 'Completed' ? 'mark as Pending' : 'mark as Completed'}
                         </button>
-                    </td>
-                    <td>
                         <button class='delete' data-id="${task.id}">Delete</button>
-                    </td>
                 </tr>
             `);
         });
@@ -33,7 +29,7 @@ $(document).ready(function () {
         const id = $(this).data('id');
         const $button = $(this);
         const $row = $button.closest('tr');
-        const $statusText = $row.find('h3');
+        const $statusText = $row.find('.status');
         $.ajax({
             url: `/tasks/${id}/update`,
             method: 'POST',
@@ -72,27 +68,54 @@ $(document).ready(function () {
         })
     })
 
-    $(document).on('click', '.add', function (e) {
+    let status = false;
+    $('.btn').on('click', function (e) {
         e.preventDefault();
+        status = !status;
         const $newHtml = `
-                <form >
-                    <label for="name">Name :</label>
-                    <input type="text" name="name" id="name" required>
-
-                    <label for="details">Details :</label>
-                    <textarea name="details" id="details" required></textarea>
-
-                    <button type='submit'>Add task</button>
-                </form>
+<div class="modal" tabindex="-1" id="exampleModal">
+ <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add New Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="modalForm">
+          <div class="mb-3">
+            <label for="recipient-name" name="name" class="col-form-label">Title :</label>
+            <input type="text" class="form-control" id="task-name">
+          </div>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Description :</label>
+            <textarea class="form-control" name="details" id="task-details"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeButton">Close</button>
+        <button type="button" class="btn btn-primary submitButton" >Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
             `;
-        $('.newForm').html($newHtml)
-    })
-
-    $(document).on('submit','.newForm', function (e) {
-        e.preventDefault();
-        const name = $(this).find('input[name="name"]').val();
-        const details = $(this).find('textarea[name="details"]').val();
-
+            $('body').append($newHtml);
+             const modalElement = document.getElementById('exampleModal');
+            const modal = new bootstrap.Modal(modalElement, {
+                backdrop: false,
+                keyboard: true,
+                focus: true
+              });
+            modal.show();
+        })
+        
+        $(document).on('click','.submitButton', function (e) {
+            e.preventDefault();
+            const name = $('#task-name').val();
+            const details = $('#task-details').val();
+        console.log(name,details)
+        
         $.ajax({
             url: '/add-task',
             method: 'POST',
@@ -102,11 +125,11 @@ $(document).ready(function () {
             },
         }).then((response) => {
             $tbody = $('.tbody');
-            $newForm = $('.newForm');
-            $newForm.empty();
             $tbody.empty();
             fetchAllItems();
-
+            $('#closeButton').click();
+            alert('inserted')
+            
         })
     })
 
