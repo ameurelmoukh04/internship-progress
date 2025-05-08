@@ -20,19 +20,7 @@ class TaskController extends AbstractController
     {
         $this->appKernel = $appkernel;
     }
-    #[Route('/images')]
-    public function showImage(Request $request,EntityManagerInterface $em)
-    {
-        dump('');
-        $basePath = $this->appKernel->getProjectDir();
-        $task = $em->getRepository(Task::class)->find(74);
-
-        return new JsonResponse(['imageUrl' => $basePath . $task->getImage()]);
-        //return $this->render('image.html.twig', [
-        //     'filename' => $filename
-        // ]);
-    }
-
+    
     #[Route('/tasks', name: 'tasks')]
     public function index(EntityManagerInterface $em, SerializerInterface $serializer): Response
     {
