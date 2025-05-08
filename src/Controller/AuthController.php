@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -15,7 +16,8 @@ class AuthController{
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
         EntityManagerInterface $em,
-        ValidatorInterface $validator)
+        ValidatorInterface $validator,
+        JWTTokenManagerInterface $jwtManager)
         {
         $data = json_decode($request->getContent(),true);
         $email = $data['email'] ?? null;
@@ -41,11 +43,11 @@ class AuthController{
 
         $em->persist($user);
         $em->flush();
-
+        $token = $jwtManager->create($user);
         return new JsonResponse([
             'status' => 201,
             'message' => 'created Successfuly',
-            'email' => $user->getEmail()
+            'user' => $user
         ],201);
 
     }
@@ -54,9 +56,9 @@ class AuthController{
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher,
-        ValidatorInterface $validator
+        JWTTokenManagerInterface $jwtManager
         ){
-        $data = json_decode($request->getContent());
+        $data = json_decode($request->getContent(),true);
         $email = $data['email'] ?? null;
         $password = $data['password'] ?? null;
 
@@ -71,11 +73,11 @@ class AuthController{
                 'message' => 'invalid Crdentials'
             ],401);
         }
-
+        $token = $jwtManager->create($user);
         return new JsonResponse([
             'status' => 200,
             'message' => 'logged in successfully',
-            'user' => $user
+            'token' => $token
         ],200);
         
 
