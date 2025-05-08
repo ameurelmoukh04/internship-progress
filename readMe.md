@@ -24,13 +24,10 @@ Hi, I’m Ameur, a backend PHP developer passionate about web technologies and L
 |-----|------|-------------|-------------|
 | 1   | 2025-05-05 | ✅ Setup dev environment, explored Symfony structure, created basic routes \ ✅Entities ➡️ classes that represent database tables (laravel models)
  | [commit](link-to-commit) |
-
 | 2   | 2025-05-06 | ✅ learned ajax such as send request to backend and handle responses, iterate the fetched Data, Getting an element in Dom and Declare events like onclick, onsubmit \
 Doctrine (EntityManager, Repositories)
-
 use serializer to return a JsonReponse from an Entity \
 building of a little project (Todo list) in pure php first, then switch to php and jquery to avoid page reload  | [commit](link) |
-
 | 3   | 2025-05-07 | ✅ implemented bootstrap in the Todo list project \
                      ✅ Jquery Datatable usage \
                           | [link] |
