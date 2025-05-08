@@ -156,10 +156,10 @@ $(document).ready(function () {
         e.preventDefault();
         //const form = ;
         var formData = new FormData(document.getElementById('modalForm'));
-        console.log(formData.entries());
-        for(const[key, value] of formData.entries()){
-            console.log(`key ${key} : ${value}`)
-        }
+        
+        // for(const[key, value] of formData.entries()){
+        //     console.log(`key ${key} : ${value}`)
+        // }
         
         
         const name = $('#task-name').val();
@@ -170,11 +170,7 @@ $(document).ready(function () {
             $.ajax({
                 url: '/add-task',
                 method: 'POST',
-                data: {
-                    name: name,
-                    details: details,
-                    image: 'test path'
-                },
+                data: formData,
             }).then((response) => {
                 $tbody = $('.tbody');
                 const $myTable = $("#myTable").DataTable();

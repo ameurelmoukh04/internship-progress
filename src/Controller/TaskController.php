@@ -33,24 +33,25 @@ class TaskController extends AbstractController{
         return new JsonResponse(['items' => json_decode($json)],200);
     }
 
-    #[Route('/new-form',name:'new-form',methods:['GET'])]
-    public function new_form(){
-        return $this->render('new.html.twig');
-    }
 
     #[Route('/add-task',name:'add-task',methods:['POST'])]
     public function store(Request $request, EntityManagerInterface $em):Response
     {
         $task = new Task;
         $task->setName($request->request->get('name'));
+
+        $uploadedFileName = $request->files->get('image')->getClientOriginalName();
         $task->setDetails($request->request->get('details'));
-        $task->setImage($request->request->get('image'));
+        
+        
+        $task->setImage('test path');
         $task->setStatus('Pending');
+        //$uploadedFile->move("private/{$task->getId()}");
         
         $em->persist($task);
         $em->flush();
 
-        return new JsonResponse(['status' => 201, 'message' =>'created']);
+        return new JsonResponse(['status' => 201, 'message' =>'created','image' => $uploadedFileName]);
     }
     
     #[Route('/tasks/{id}/delete',name:'destroy-task')]
