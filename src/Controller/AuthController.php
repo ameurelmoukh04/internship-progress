@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -56,6 +57,7 @@ class AuthController{
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher,
+        LoggerInterface $logger,
         JWTTokenManagerInterface $jwtManager
         ){
         $data = json_decode($request->getContent(),true);
@@ -74,6 +76,7 @@ class AuthController{
             ],401);
         }
         $token = $jwtManager->create($user);
+        $logger->info('User' . $user->getEmail() . 'has been logged in successfully');
         return new JsonResponse([
             'status' => 200,
             'message' => 'logged in successfully',
