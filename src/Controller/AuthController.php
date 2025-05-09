@@ -3,19 +3,30 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class AuthController{
+class AuthController extends AbstractController{
+
+    #[Route('/api/login/template', methods:['GET'])]
+    
+    public function loginTemplate(){
+        return $this->render('login.html.twig');
+    }
+
     #[Route('/api/register',methods:['POST'])]
     public function register(
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
         EntityManagerInterface $em,
-        ValidatorInterface $validator)
+        ValidatorInterface $validator,
+        JWTTokenManagerInterface $jwtManager)
         {
         $data = json_decode($request->getContent(),true);
         $email = $data['email'] ?? null;
@@ -41,11 +52,11 @@ class AuthController{
 
         $em->persist($user);
         $em->flush();
-
+        $token = $jwtManager->create($user);
         return new JsonResponse([
             'status' => 201,
             'message' => 'created Successfuly',
-            'email' => $user->getEmail()
+            'user' => $user
         ],201);
 
     }
@@ -54,9 +65,10 @@ class AuthController{
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher,
-        ValidatorInterface $validator
+        LoggerInterface $logger,
+        JWTTokenManagerInterface $jwtManager
         ){
-        $data = json_decode($request->getContent());
+        $data = json_decode($request->getContent(),true);
         $email = $data['email'] ?? null;
         $password = $data['password'] ?? null;
 
@@ -71,11 +83,12 @@ class AuthController{
                 'message' => 'invalid Crdentials'
             ],401);
         }
-
+        $token = $jwtManager->create($user);
+        $logger->info('User' . $user->getEmail() . 'has been logged in successfully');
         return new JsonResponse([
             'status' => 200,
             'message' => 'logged in successfully',
-            'user' => $user
+            'token' => $token
         ],200);
         
 
